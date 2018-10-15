@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import numpy as np
 import ctypes as ct
@@ -1969,8 +1970,35 @@ def futhark_to_bits32(x):
 def futhark_from_bits32(x):
   s = struct.pack('>l', x)
   return np.float32(struct.unpack('>f', s)[0])
-class treesolver:
-  entry_points = {"main": (["i32", "i32", "i32"], ["i32"])}
+runtime_file = None
+do_warmup_run = False
+num_runs = 1
+entry_point = "main"
+parser = argparse.ArgumentParser(description="A compiled Futhark program.")
+parser.add_argument("-t", "--write-runtime-to", action="append", default=[])
+parser.add_argument("-r", "--runs", action="append", default=[])
+parser.add_argument("-e", "--entry-point", action="append", default=[])
+parser.add_argument("-b", "--binary-output", action="append_const", default=[],
+                    const=None)
+parser.add_argument("-p", "--platform", action="append", default=[])
+parser.add_argument("-d", "--device", action="append", default=[])
+parser_result = vars(parser.parse_args(sys.argv[1:]))
+for optarg in parser_result["write_runtime_to"]:
+  if runtime_file:
+    runtime_file.close()
+  runtime_file = open(optarg, "w")
+for optarg in parser_result["runs"]:
+  num_runs = optarg
+  do_warmup_run = True
+for optarg in parser_result["entry_point"]:
+  entry_point = optarg
+for optarg in parser_result["binary_output"]:
+  pass
+for optarg in parser_result["platform"]:
+  preferred_platform = optarg
+for optarg in parser_result["device"]:
+  preferred_device = optarg
+class internal:
   def __init__(self, command_queue=None, interactive=False,
                platform_pref=preferred_platform, device_pref=preferred_device,
                default_group_size=None, default_num_groups=None,
@@ -2003,46 +2031,54 @@ class treesolver:
                                        user_sizes=sizes,
                                        all_sizes={})
     
-  def futhark_main(self, k_3540, x_3541, y_3542):
-    cond_3543 = (k_3540 == np.int32(0))
-    if cond_3543:
-      res_3545 = (x_3541 + y_3542)
-      res_3544 = res_3545
-    else:
-      cond_3546 = (k_3540 == np.int32(1))
-      if cond_3546:
-        res_3548 = (x_3541 - y_3542)
-        res_3547 = res_3548
-      else:
-        cond_3549 = (k_3540 == np.int32(2))
-        if cond_3549:
-          res_3551 = (x_3541 * y_3542)
-          res_3550 = res_3551
-        else:
-          res_3552 = sdiv32(x_3541, y_3542)
-          res_3550 = res_3552
-        res_3547 = res_3550
-      res_3544 = res_3547
-    scalar_out_3553 = res_3544
-    return scalar_out_3553
-  def main(self, k_3540_ext, x_3541_ext, y_3542_ext):
-    try:
-      k_3540 = np.int32(ct.c_int32(k_3540_ext))
-    except (TypeError, AssertionError) as e:
-      raise TypeError("Argument #0 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
-                                                                                                                            type(k_3540_ext),
-                                                                                                                            k_3540_ext))
-    try:
-      x_3541 = np.int32(ct.c_int32(x_3541_ext))
-    except (TypeError, AssertionError) as e:
-      raise TypeError("Argument #1 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
-                                                                                                                            type(x_3541_ext),
-                                                                                                                            x_3541_ext))
-    try:
-      y_3542 = np.int32(ct.c_int32(y_3542_ext))
-    except (TypeError, AssertionError) as e:
-      raise TypeError("Argument #2 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
-                                                                                                                            type(y_3542_ext),
-                                                                                                                            y_3542_ext))
-    scalar_out_3553 = self.futhark_main(k_3540, x_3541, y_3542)
-    return np.int32(scalar_out_3553)
+  def futhark_main(self, k_3512, x_3513):
+    cond_3514 = (k_3512 == np.int32(1))
+    res_3515 = (x_3513 == np.int32(0))
+    x_3516 = (cond_3514 and res_3515)
+    x_3517 = not(cond_3514)
+    res_3518 = (x_3516 or x_3517)
+    scalar_out_3519 = res_3518
+    return scalar_out_3519
+self = internal()
+def entry_main():
+  k_3512_ext = read_value("i32")
+  x_3513_ext = read_value("i32")
+  try:
+    k_3512 = np.int32(ct.c_int32(k_3512_ext))
+  except (TypeError, AssertionError) as e:
+    raise TypeError("Argument #0 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
+                                                                                                                          type(k_3512_ext),
+                                                                                                                          k_3512_ext))
+  try:
+    x_3513 = np.int32(ct.c_int32(x_3513_ext))
+  except (TypeError, AssertionError) as e:
+    raise TypeError("Argument #1 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
+                                                                                                                          type(x_3513_ext),
+                                                                                                                          x_3513_ext))
+  try:
+    with np.errstate(divide="ignore", over="ignore", under="ignore",
+                     invalid="ignore"):
+      if do_warmup_run:
+        scalar_out_3519 = self.futhark_main(k_3512, x_3513)
+        self.queue.finish()
+      for i in range(int(num_runs)):
+        time_start = time.time()
+        scalar_out_3519 = self.futhark_main(k_3512, x_3513)
+        self.queue.finish()
+        time_end = time.time()
+        if runtime_file:
+          runtime_file.write(str((int((time_end * 1000000)) - int((time_start * 1000000)))))
+          runtime_file.write("\n")
+  except AssertionError as e:
+    sys.exit("Assertion.{} failed".format(e))
+  if runtime_file:
+    runtime_file.close()
+  write_value(np.bool(scalar_out_3519))
+  sys.stdout.write("\n")
+entry_points = {"main": entry_main}
+entry_point_fun = entry_points.get(entry_point)
+if (entry_point_fun == None):
+  sys.exit("No entry point '{}'.  Select another with --entry point.  Options are:\n{}".format(entry_point,
+                                                                                               "\n".join(entry_points.keys())))
+else:
+  entry_point_fun()
