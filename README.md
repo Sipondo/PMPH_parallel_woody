@@ -13,7 +13,7 @@ https://futhark-lang.org/blog/2016-04-15-futhark-and-pyopencl.html
 - [ ] Find out how to call futhark from python
 - [ ] Call futhark from woody  
 * Nodes  
-- [ ] Get woody running on the nodes
+- [x] Get woody running on the nodes
 - [ ] Compile treesolver into "something python"  
 * Futhark  
 - [ ] Flattening -> Figure out what to flatten
@@ -34,10 +34,13 @@ Create a virtual environment and install Woody's requirements::
     virtualenv woody
     source woody/bin/activate
     cd ..
-    pip install -r requirements
+    pip install -r requirements.txt
 
-Download Swig from http://www.swig.org/download.html, install it in your home directory by running in the directory of the extracted tar file::
+Download Swig from http://www.swig.org/download.html (using wget), install it in your home directory by running in the directory of the extracted tar file::
 
+    wget http://prdownloads.sourceforge.net/swig/swig-3.0.12.tar.gz
+    tar -xzf swig-3.0.12.tar.gz
+    cd swig-3.0.12
     ./configure --prefix={install location} --without-pcre
     make
     make install
