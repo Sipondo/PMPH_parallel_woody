@@ -21,11 +21,13 @@ https://futhark-lang.org/blog/2016-04-15-futhark-and-pyopencl.html
 
 # How to install Woody
 
-First clone the Woody repository:
+First clone and open the Woody submodule::
 
-`git clone https://github.com/gieseke/woody.git`
+    git submodule init
+    git submodule update
+    cd woody
 
-Replace `requirements.txt` with the contents of `requirements_min.txt` then enter::
+Create a virtual environment and install Woody's requirements::
 
     mkdir .venv
     cd .venv
