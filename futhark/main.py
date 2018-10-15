@@ -5,6 +5,6 @@ sys.path.append("futhark")
 from treesolver import treesolver
 
 tree = treesolver()
-res = tree.main(0,1).get()
+res = tree.main(0,1)
 print("And the result itself:")
 print(res)
