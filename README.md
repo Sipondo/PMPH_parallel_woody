@@ -64,4 +64,6 @@ Install `pyopencl`::
 
 To build a futhark-opencl library:
 
+    cd futhark_opencl_example
     futhark-pyopencl --library futmath.fut
+    python math_example.py
