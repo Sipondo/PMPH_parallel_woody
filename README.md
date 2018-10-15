@@ -32,7 +32,7 @@ Replace `requirements.txt` with the contents of `requirements_min.txt` then ente
     virtualenv woody
     source woody/bin/activate
     cd ..
-    pip install -r requirements
+    pip install -r requirements.txt
 
 Download Swig from http://www.swig.org/download.html (using wget), install it in your home directory by running in the directory of the extracted tar file::
 
