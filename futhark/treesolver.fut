@@ -1,5 +1,5 @@
 --solve a tree
-
+type int = i32
 
 let pred1 (k : int, x: int) : bool =
   if      k == 1 then x == 0 -- zeros
