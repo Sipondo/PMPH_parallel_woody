@@ -1,7 +1,7 @@
 # PMPH_parallel_woody
 
 # Building the report
-I build the report using latexmk, that will put all auxillary files in aux/. 
+I build the report using latexmk, that will put all auxillary files in aux/.
 Using mklatex could work as well.
 
 
@@ -60,3 +60,6 @@ To check Woody is successfully installed run::
     cd experiments/small_data
     python launch.py
 
+To build a futhark-opencl library:
+
+    futhark-pyopencl --library futmath.fut
