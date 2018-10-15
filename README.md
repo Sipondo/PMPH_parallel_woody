@@ -50,15 +50,17 @@ Install `h2o`:
 
    pip install h2o
 
-Install `pyopencl`::
-
-    pip install -U pybind11
-    pip install -U pyopencl
-
 To check Woody is successfully installed run::
 
     cd experiments/small_data
     python launch.py
+
+-----------------
+
+Install `pyopencl`::
+
+    pip install -U pybind11
+    pip install -U pyopencl
 
 To build a futhark-opencl library:
 
