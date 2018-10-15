@@ -1,9 +1,7 @@
 import numpy as np
-import _treesolver
-from futhark_ffi import Futhark
+from treeresolver import treeresolver
 
-test = Futhark(_treesolver)
-res = test.pred1(0,1)
-print(test.from_futhark(res))
+tree = treesolver()
+res = treeresolver.pred1(0,1)
 print("And the result itself:")
 print(res)
