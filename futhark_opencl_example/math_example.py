@@ -9,7 +9,7 @@ sys.path.append("futhark")
 ######
 
 import numpy as np
-from treesolver import treesolver #Import your library here
+from futmath import futmath #Import your library here
 
 params_list = [[0, 1076, 2320],
                [1, 5034, 3042],
@@ -22,10 +22,10 @@ operation_dict = {0: "+",
                   3: "/"}
 
 #Build the futhark object
-tree = treesolver()
+calculator = futmath()
 
 for params in params_list:
     print('{:d}{}{:d} = {:d}'.format(params[1],
                               operation_dict[params[0]],
                               params[2],
-                              tree.main(*params))) #Call your futhark function object with params
+                              calculator.main(*params))) #Call your function with params

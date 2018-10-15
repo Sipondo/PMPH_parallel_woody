@@ -191,7 +191,7 @@ fut_opencl_src = """#pragma OPENCL EXTENSION cl_clang_storage_class_specifiers :
 __kernel void dummy_kernel(__global unsigned char *dummy, int n)
 {
     const int thread_gid = get_global_id(0);
-    
+
     if (thread_gid >= n)
         return;
 }
@@ -288,52 +288,52 @@ static inline int8_t sdiv8(int8_t x, int8_t y)
 {
     int8_t q = x / y;
     int8_t r = x % y;
-    
+
     return q - ((r != 0 && r < 0 != y < 0) ? 1 : 0);
 }
 static inline int16_t sdiv16(int16_t x, int16_t y)
 {
     int16_t q = x / y;
     int16_t r = x % y;
-    
+
     return q - ((r != 0 && r < 0 != y < 0) ? 1 : 0);
 }
 static inline int32_t sdiv32(int32_t x, int32_t y)
 {
     int32_t q = x / y;
     int32_t r = x % y;
-    
+
     return q - ((r != 0 && r < 0 != y < 0) ? 1 : 0);
 }
 static inline int64_t sdiv64(int64_t x, int64_t y)
 {
     int64_t q = x / y;
     int64_t r = x % y;
-    
+
     return q - ((r != 0 && r < 0 != y < 0) ? 1 : 0);
 }
 static inline int8_t smod8(int8_t x, int8_t y)
 {
     int8_t r = x % y;
-    
+
     return r + (r == 0 || (x > 0 && y > 0) || (x < 0 && y < 0) ? 0 : y);
 }
 static inline int16_t smod16(int16_t x, int16_t y)
 {
     int16_t r = x % y;
-    
+
     return r + (r == 0 || (x > 0 && y > 0) || (x < 0 && y < 0) ? 0 : y);
 }
 static inline int32_t smod32(int32_t x, int32_t y)
 {
     int32_t r = x % y;
-    
+
     return r + (r == 0 || (x > 0 && y > 0) || (x < 0 && y < 0) ? 0 : y);
 }
 static inline int64_t smod64(int64_t x, int64_t y)
 {
     int64_t r = x % y;
-    
+
     return r + (r == 0 || (x > 0 && y > 0) || (x < 0 && y < 0) ? 0 : y);
 }
 static inline int8_t squot8(int8_t x, int8_t y)
@@ -595,7 +595,7 @@ static inline char sle64(int64_t x, int64_t y)
 static inline int8_t pow8(int8_t x, int8_t y)
 {
     int8_t res = 1, rem = y;
-    
+
     while (rem != 0) {
         if (rem & 1)
             res *= x;
@@ -607,7 +607,7 @@ static inline int8_t pow8(int8_t x, int8_t y)
 static inline int16_t pow16(int16_t x, int16_t y)
 {
     int16_t res = 1, rem = y;
-    
+
     while (rem != 0) {
         if (rem & 1)
             res *= x;
@@ -619,7 +619,7 @@ static inline int16_t pow16(int16_t x, int16_t y)
 static inline int32_t pow32(int32_t x, int32_t y)
 {
     int32_t res = 1, rem = y;
-    
+
     while (rem != 0) {
         if (rem & 1)
             res *= x;
@@ -631,7 +631,7 @@ static inline int32_t pow32(int32_t x, int32_t y)
 static inline int64_t pow64(int64_t x, int64_t y)
 {
     int64_t res = 1, rem = y;
-    
+
     while (rem != 0) {
         if (rem & 1)
             res *= x;
@@ -934,7 +934,7 @@ static inline int32_t futrts_to_bits32(float x)
         float f;
         int32_t t;
     } p;
-    
+
     p.f = x;
     return p.t;
 }
@@ -944,7 +944,7 @@ static inline float futrts_from_bits32(int32_t x)
         int32_t f;
         float t;
     } p;
-    
+
     p.f = x;
     return p.t;
 }
@@ -2002,4 +2002,3 @@ class treesolver:
                                        required_types=[],
                                        user_sizes=sizes,
                                        all_sizes={})
-    
