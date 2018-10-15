@@ -62,4 +62,6 @@ To check Woody is successfully installed run::
 
 To build a futhark-opencl library:
 
+    cd futhark_opencl_example
     futhark-pyopencl --library futmath.fut
+    python math_example.py
