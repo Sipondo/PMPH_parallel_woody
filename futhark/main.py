@@ -17,8 +17,7 @@ operation_dict = {0: "+",
 tree = treesolver()
 
 for params in params_list:
-    tree.main(*params)
     print('{:d}{}{:d} = {:d}'.format(params[1],
                               operation_dict[params[0]],
                               params[2],
-                              tree.main(*params))
+                              tree.main(*params)))
