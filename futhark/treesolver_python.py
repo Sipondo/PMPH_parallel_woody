@@ -1,6 +1,5 @@
 # self.wrapper.module.predict_extern(X, preds, indices, self.wrapper.params, self.wrapper.forest)
 # preds_fut = treesolve(X, preds_fut, indices, self.wrapper.params, self.wrapper.forest, preds)
-import numpy as np
 from treesolver import treesolver
 
 solver = treesolver()
