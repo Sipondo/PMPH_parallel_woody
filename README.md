@@ -23,7 +23,7 @@ https://futhark-lang.org/blog/2016-04-15-futhark-and-pyopencl.html
 
 # How to install Woody
 
-First clone and open the Woody submodule::
+First clone and open the Woody submodule:
 
     git submodule init
     git submodule update
@@ -31,7 +31,7 @@ First clone and open the Woody submodule::
     git checkout master
     git pull
 
-Create a virtual environment and install Woody's requirements::
+Create a virtual environment and install Woody's requirements:
 
     mkdir .venv
     cd .venv
@@ -40,7 +40,7 @@ Create a virtual environment and install Woody's requirements::
     cd ..
     pip install -r requirements.txt
 
-Download Swig from http://www.swig.org/download.html (using wget), install it in your home directory by running in the directory of the extracted tar file::
+Download Swig from http://www.swig.org/download.html (using wget), install it in your home directory by running in the directory of the extracted tar file:
 
     wget http://prdownloads.sourceforge.net/swig/swig-3.0.12.tar.gz
     tar -xzf swig-3.0.12.tar.gz
@@ -50,23 +50,23 @@ Download Swig from http://www.swig.org/download.html (using wget), install it in
     make install
     export PATH=$PATH:{install location}/bin
 
-Return to the Woody directory and run::
+Return to the Woody directory and run:
 
     python setup.py clean
     python setup.py develop
 
-Install `h2o`::
+Install `h2o`:
 
     pip install h2o
 
-To check Woody is successfully installed run::
+To check Woody is successfully installed run:
 
     cd experiments/small_data
     python launch.py
 
 -----------------
 
-Install `pyopencl`::
+Install `pyopencl`:
 
     pip install -U pybind11
     pip install -U pyopencl
