@@ -28,6 +28,8 @@ First clone and open the Woody submodule::
     git submodule init
     git submodule update
     cd woody
+    git checkout master
+    git pull
 
 Create a virtual environment and install Woody's requirements::
 
@@ -53,9 +55,9 @@ Return to the Woody directory and run::
     python setup.py clean
     python setup.py develop
 
-Install `h2o`:
+Install `h2o`::
 
-   pip install h2o
+    pip install h2o
 
 To check Woody is successfully installed run::
 
