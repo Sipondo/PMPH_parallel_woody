@@ -11,11 +11,12 @@ https://futhark.readthedocs.io/en/latest/man/futhark-pyopencl.html
 https://futhark-lang.org/blog/2018-07-05-python-gotta-go-faster.html  
 https://futhark-lang.org/blog/2016-04-15-futhark-and-pyopencl.html  
 - [x] Find out how to call futhark from python (use pyopencl)
-- [ ] Call futhark from woody  
-- [ ] Export a fitted tree to a format we can use as input in futhark
+- [x] Call futhark from woody  
+- [x] Export a fitted tree to a format we can use as input in futhark
+- [ ] Visualise Futhark input data
 * GPU-Nodes  
 - [x] Get woody running on the nodes
-- [ ] Compile treesolver into "something python"  
+- [x] Compile treesolver/math example into "something python"  
 * Futhark  
 - [ ] Flattening -> Figure out what to flatten
 
