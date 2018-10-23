@@ -76,3 +76,31 @@ To build a futhark-opencl library:
     cd futhark_opencl_example
     futhark-pyopencl --library futmath.fut
     python math_example.py
+
+
+-----------------
+
+## How is predict being called
+models/forest/base.py, line 277: Call predict_all_extern  
+predict_all_extern is in models/fores/src/tree/base.c  
+Then cpu_query_forest_all_preds is called.  
+cpu_query_forest_all_preds is in models/forest/src/tree/cpu/base.c  
+
+## Types in woody
+models/forest/src/tree/include/types.h  
+We have to make a python function that takes as input a tree and then splits it into 5 arrays. 
+We want to represent a tree as 5 arrays, containing the data needed to reconstruct each node. 
+
+
+A tree node is:
+* left_id, unsigned int  
+* right_id, unsigned int  
+* feature,  unsigned int  
+* thres_or_leaf, FLOAT_TYPE  
+* leaf_criterion, unsigned int  
+
+
+
+- A tree is a TREE_NODE *root, int n_allocated and int node_counter.  
+- A forest is an array of trees, and second value is number of trees (n_trees)  
+
