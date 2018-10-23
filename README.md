@@ -50,26 +50,26 @@ Download Swig from http://www.swig.org/download.html (using wget), install it in
     make install
     export PATH=$PATH:{install location}/bin
 
-Return to the Woody directory and run:
-
-    python setup.py clean
-    python setup.py develop
-
 Install `h2o`:
 
     pip install h2o
 
+Install `pyopencl`:
+
+    pip install -U pybind11
+    pip install -U pyopencl
+
+Return to the Woody directory and run:
+
+    python setup.py clean
+    python setup.py develop
+    
 To check Woody is successfully installed run:
 
     cd experiments/small_data
     python launch.py
 
 -----------------
-
-Install `pyopencl`:
-
-    pip install -U pybind11
-    pip install -U pyopencl
 
 To build a futhark-opencl library:
 
