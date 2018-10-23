@@ -76,3 +76,17 @@ To build a futhark-opencl library:
     cd futhark_opencl_example
     futhark-pyopencl --library futmath.fut
     python math_example.py
+
+
+-----------------
+
+# Mads' stupid unfinished guide to what we think is going on in this woody hell 
+
+
+
+models/forest/base.py, line 277: Call predict_all_extern  
+predict_all_extern is in models/fores/src/tree/base.c  
+Then cpu_query_forest_all_preds is called.  
+cpu_query_forest_all_preds is in models/forest/src/tree/cpu/base.c  
+
+
