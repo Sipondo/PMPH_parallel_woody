@@ -12,14 +12,43 @@
 --   else x / y                  -- divide
 
 let main [treelength] [Xlength] [predlength] [indlength]
-      (tree : [treelength]i32)
+      (treeLeftid : [treelength]i32)
+      (treeRightid : [treelength]i32)
+      (treeFeature : [treelength]i32)
+      (treeThres_or_leaf : [treelength]i32)
       (Xtest : [Xlength]f32)
       (nXtest : i32)
       (dXtest : i32)
       (predictions : [predlength]f32)
       (indices: [indlength]i32)
       (dindices : i32)
-      (prediction_type : i32) : [predlength]f32 =
+      (prediction_type : i32)
+      (CONST_ARRAY: [4]i32) : [predlength]f32 =
+
+      let TREE_ROOT_ID = CONST_ARRAY[0]
+      let TREE_CHILD_ID_NOT_SET = CONST_ARRAY[1]
+      let PREDICTION_TYPE_NORMAL = CONST_ARRAY[2]
+      let PREDICTION_TYPE_LEAVES_IDS = CONST_ARRAY[3]
+
+      let n_preds = if dindices>0 then nindices else nXtest
+      let predictions =
+        loop i while i < n_preds do
+          let idx = if dindices > 0 then idx = indices[i] else i
+          let tpatt = Xtest + idx * dXtest
+          let node_id = TREE_ROOT_ID
+
+          while treeLeftid[node_id] != TREE_CHILD_ID_NOT_SET do
+            let node_id = if tpatt[treeFeature[node_id]] <= treeThres_or_leaf[node_id]
+              then treeLeftid else treeRightid
+
+          let predictions[i] = if prediction_type == PREDICTION_TYPE_NORMAL
+            then treeThres_or_leaf[node_id] else
+              if prediction_type == PREDICTION_TYPE_LEAVES_IDS
+                then node_id else -1 -- exit failure
+
+          in predictions
+
+
 
 
 
