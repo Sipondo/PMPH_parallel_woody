@@ -36,8 +36,8 @@ let main [treelength] [Xlength] [indlength]
           unsafe map (\ i ->
           let idx = if dindices > 0 then indices[i] else i
           let row_start = idx * dXtest
-          let node_id = TREE_ROOT_ID
-          in loop j = 0 while treeLeftid[node_id] != TREE_CHILD_ID_NOT_SET do
+          --let node_id = TREE_ROOT_ID
+          in loop node_id = TREE_ROOT_ID while treeLeftid[node_id] != TREE_CHILD_ID_NOT_SET do
             let node_id = if Xtest[row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id]
                           then treeLeftid[node_id] else treeRightid[node_id]
             in node_id) (iota n_preds)
