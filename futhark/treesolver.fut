@@ -33,7 +33,7 @@ let main [treelength] [Xlength] [indlength]
 
   --
   let predictions =
-          map (\ i ->
+          unsafe map (\ i ->
           let idx = if dindices > 0 then indices[i] else i
           let row_start = idx * dXtest
           let node_id = TREE_ROOT_ID
