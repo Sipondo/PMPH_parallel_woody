@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import sys
 import numpy as np
 import ctypes as ct
@@ -949,7 +948,95 @@ static inline float futrts_from_bits32(int32_t x)
     p.f = x;
     return p.t;
 }
-
+__kernel void map_kernel_4330(int32_t dXtest_4290, unsigned char cond_4294,
+                              int32_t res_4295, int32_t x_4300,
+                              unsigned char loop_cond_4302, int32_t y_4303,
+                              float y_4305, __global
+                              unsigned char *treeRightid_mem_4352, __global
+                              unsigned char *Xtest_mem_4358, __global
+                              unsigned char *indices_mem_4360, __global
+                              unsigned char *mem_4363)
+{
+    int32_t wave_sizze_4368;
+    int32_t group_sizze_4369;
+    bool thread_active_4370;
+    int32_t gtid_4323;
+    int32_t global_tid_4330;
+    int32_t local_tid_4331;
+    int32_t group_id_4332;
+    
+    global_tid_4330 = get_global_id(0);
+    local_tid_4331 = get_local_id(0);
+    group_sizze_4369 = get_local_size(0);
+    wave_sizze_4368 = LOCKSTEP_WIDTH;
+    group_id_4332 = get_group_id(0);
+    gtid_4323 = global_tid_4330;
+    thread_active_4370 = slt32(gtid_4323, res_4295);
+    
+    int32_t res_4334;
+    int32_t res_4336;
+    int32_t i_4337;
+    float x_4338;
+    bool cond_4340;
+    int32_t res_4341;
+    bool res_4344;
+    int32_t res_4345;
+    
+    if (thread_active_4370) {
+        if (cond_4294) {
+            int32_t res_4335 = *(__global
+                                 int32_t *) &indices_mem_4360[gtid_4323 * 4];
+            
+            res_4334 = res_4335;
+        } else {
+            res_4334 = gtid_4323;
+        }
+        res_4336 = dXtest_4290 * res_4334;
+        i_4337 = y_4303 + res_4336;
+        if (loop_cond_4302) {
+            float x_4339 = *(__global float *) &Xtest_mem_4358[i_4337 * 4];
+            
+            x_4338 = x_4339;
+        } else {
+            x_4338 = 0.0F;
+        }
+        cond_4340 = x_4338 <= y_4305;
+        if (loop_cond_4302) {
+            int32_t x_4342;
+            
+            if (cond_4340) {
+                x_4342 = x_4300;
+            } else {
+                int32_t res_4343 = *(__global
+                                     int32_t *) &treeRightid_mem_4352[0];
+                
+                x_4342 = res_4343;
+            }
+            res_4341 = x_4342;
+        } else {
+            res_4341 = 0;
+        }
+        
+        bool loop_while_4346;
+        int32_t j_4347;
+        
+        loop_while_4346 = loop_cond_4302;
+        j_4347 = 0;
+        while (loop_while_4346) {
+            bool loop_while_tmp_4371 = loop_cond_4302;
+            int32_t j_tmp_4372;
+            
+            j_tmp_4372 = res_4341;
+            loop_while_4346 = loop_while_tmp_4371;
+            j_4347 = j_tmp_4372;
+        }
+        res_4344 = loop_while_4346;
+        res_4345 = j_4347;
+    }
+    if (thread_active_4370) {
+        *(__global int32_t *) &mem_4363[gtid_4323 * 4] = res_4345;
+    }
+}
 """
 # Hacky parser/reader/writer for values written in Futhark syntax.
 # Used for reading stdin when compiling standalone programs with the
@@ -1970,35 +2057,9 @@ def futhark_to_bits32(x):
 def futhark_from_bits32(x):
   s = struct.pack('>l', x)
   return np.float32(struct.unpack('>f', s)[0])
-runtime_file = None
-do_warmup_run = False
-num_runs = 1
-entry_point = "main"
-parser = argparse.ArgumentParser(description="A compiled Futhark program.")
-parser.add_argument("-t", "--write-runtime-to", action="append", default=[])
-parser.add_argument("-r", "--runs", action="append", default=[])
-parser.add_argument("-e", "--entry-point", action="append", default=[])
-parser.add_argument("-b", "--binary-output", action="append_const", default=[],
-                    const=None)
-parser.add_argument("-p", "--platform", action="append", default=[])
-parser.add_argument("-d", "--device", action="append", default=[])
-parser_result = vars(parser.parse_args(sys.argv[1:]))
-for optarg in parser_result["write_runtime_to"]:
-  if runtime_file:
-    runtime_file.close()
-  runtime_file = open(optarg, "w")
-for optarg in parser_result["runs"]:
-  num_runs = optarg
-  do_warmup_run = True
-for optarg in parser_result["entry_point"]:
-  entry_point = optarg
-for optarg in parser_result["binary_output"]:
-  pass
-for optarg in parser_result["platform"]:
-  preferred_platform = optarg
-for optarg in parser_result["device"]:
-  preferred_device = optarg
-class internal:
+class treesolver:
+  entry_points = {"main": (["[]i32", "[]i32", "[]i32", "[]f32", "[]f32", "i32",
+                            "i32", "[]i32", "i32", "i32"], ["[]i32"])}
   def __init__(self, command_queue=None, interactive=False,
                platform_pref=preferred_platform, device_pref=preferred_device,
                default_group_size=None, default_num_groups=None,
@@ -2027,58 +2088,223 @@ class internal:
                                        default_num_groups=default_num_groups,
                                        default_tile_size=default_tile_size,
                                        size_heuristics=size_heuristics,
-                                       required_types=[],
+                                       required_types=["i32", "f32", "bool"],
                                        user_sizes=sizes,
-                                       all_sizes={})
-    
-  def futhark_main(self, k_3512, x_3513):
-    cond_3514 = (k_3512 == np.int32(1))
-    res_3515 = (x_3513 == np.int32(0))
-    x_3516 = (cond_3514 and res_3515)
-    x_3517 = not(cond_3514)
-    res_3518 = (x_3516 or x_3517)
-    scalar_out_3519 = res_3518
-    return scalar_out_3519
-self = internal()
-def entry_main():
-  k_3512_ext = read_value("i32")
-  x_3513_ext = read_value("i32")
-  try:
-    k_3512 = np.int32(ct.c_int32(k_3512_ext))
-  except (TypeError, AssertionError) as e:
-    raise TypeError("Argument #0 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
-                                                                                                                          type(k_3512_ext),
-                                                                                                                          k_3512_ext))
-  try:
-    x_3513 = np.int32(ct.c_int32(x_3513_ext))
-  except (TypeError, AssertionError) as e:
-    raise TypeError("Argument #1 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
-                                                                                                                          type(x_3513_ext),
-                                                                                                                          x_3513_ext))
-  try:
-    with np.errstate(divide="ignore", over="ignore", under="ignore",
-                     invalid="ignore"):
-      if do_warmup_run:
-        scalar_out_3519 = self.futhark_main(k_3512, x_3513)
+                                       all_sizes={"group_size_4324": {"class": "group_size", "value": None}})
+    self.map_kernel_4330_var = program.map_kernel_4330
+  def futhark_main(self, treeLeftid_mem_sizze_4349, treeLeftid_mem_4350,
+                   treeRightid_mem_sizze_4351, treeRightid_mem_4352,
+                   treeFeature_mem_sizze_4353, treeFeature_mem_4354,
+                   treeThres_or_leaf_mem_sizze_4355, treeThres_or_leaf_mem_4356,
+                   Xtest_mem_sizze_4357, Xtest_mem_4358, indices_mem_sizze_4359,
+                   indices_mem_4360, sizze_4278, sizze_4279, sizze_4280,
+                   sizze_4281, sizze_4282, sizze_4283, nXtest_4289, dXtest_4290,
+                   dindices_4292, prediction_type_4293):
+    cond_4294 = slt32(np.int32(0), dindices_4292)
+    if cond_4294:
+      res_4295 = dindices_4292
+    else:
+      res_4295 = nXtest_4289
+    read_res_4373 = np.empty(1, dtype=ct.c_int32)
+    cl.enqueue_copy(self.queue, read_res_4373, treeLeftid_mem_4350,
+                    device_offset=np.long(np.int32(0)), is_blocking=True)
+    x_4300 = read_res_4373[0]
+    loop_cond_4301 = (x_4300 == np.int32(0))
+    loop_cond_4302 = not(loop_cond_4301)
+    if loop_cond_4302:
+      read_res_4374 = np.empty(1, dtype=ct.c_int32)
+      cl.enqueue_copy(self.queue, read_res_4374, treeFeature_mem_4354,
+                      device_offset=np.long(np.int32(0)), is_blocking=True)
+      x_4304 = read_res_4374[0]
+      y_4303 = x_4304
+    else:
+      y_4303 = np.int32(0)
+    if loop_cond_4302:
+      read_res_4375 = np.empty(1, dtype=ct.c_float)
+      cl.enqueue_copy(self.queue, read_res_4375, treeThres_or_leaf_mem_4356,
+                      device_offset=np.long(np.int32(0)), is_blocking=True)
+      x_4306 = read_res_4375[0]
+      y_4305 = x_4306
+    else:
+      y_4305 = np.float32(0.0)
+    group_sizze_4325 = self.sizes["group_size_4324"]
+    y_4326 = (group_sizze_4325 - np.int32(1))
+    x_4327 = (res_4295 + y_4326)
+    num_groups_4328 = squot32(x_4327, group_sizze_4325)
+    num_threads_4329 = (group_sizze_4325 * num_groups_4328)
+    binop_x_4362 = sext_i32_i64(res_4295)
+    bytes_4361 = (np.int64(4) * binop_x_4362)
+    mem_4363 = opencl_alloc(self, bytes_4361, "mem_4363")
+    if ((1 * (num_groups_4328 * group_sizze_4325)) != 0):
+      self.map_kernel_4330_var.set_args(np.int32(dXtest_4290),
+                                        np.byte(cond_4294), np.int32(res_4295),
+                                        np.int32(x_4300),
+                                        np.byte(loop_cond_4302),
+                                        np.int32(y_4303), np.float32(y_4305),
+                                        treeRightid_mem_4352, Xtest_mem_4358,
+                                        indices_mem_4360, mem_4363)
+      cl.enqueue_nd_range_kernel(self.queue, self.map_kernel_4330_var,
+                                 (np.long((num_groups_4328 * group_sizze_4325)),),
+                                 (np.long(group_sizze_4325),))
+      if synchronous:
         self.queue.finish()
-      for i in range(int(num_runs)):
-        time_start = time.time()
-        scalar_out_3519 = self.futhark_main(k_3512, x_3513)
-        self.queue.finish()
-        time_end = time.time()
-        if runtime_file:
-          runtime_file.write(str((int((time_end * 1000000)) - int((time_start * 1000000)))))
-          runtime_file.write("\n")
-  except AssertionError as e:
-    sys.exit("Assertion.{} failed".format(e))
-  if runtime_file:
-    runtime_file.close()
-  write_value(np.bool(scalar_out_3519))
-  sys.stdout.write("\n")
-entry_points = {"main": entry_main}
-entry_point_fun = entry_points.get(entry_point)
-if (entry_point_fun == None):
-  sys.exit("No entry point '{}'.  Select another with --entry point.  Options are:\n{}".format(entry_point,
-                                                                                               "\n".join(entry_points.keys())))
-else:
-  entry_point_fun()
+    out_arrsizze_4367 = res_4295
+    out_memsizze_4366 = bytes_4361
+    out_mem_4365 = mem_4363
+    return (out_memsizze_4366, out_mem_4365, out_arrsizze_4367)
+  def main(self, treeLeftid_mem_4350_ext, treeRightid_mem_4352_ext,
+           treeFeature_mem_4354_ext, treeThres_or_leaf_mem_4356_ext,
+           Xtest_mem_4358_ext, nXtest_4289_ext, dXtest_4290_ext,
+           indices_mem_4360_ext, dindices_4292_ext, prediction_type_4293_ext):
+    try:
+      assert ((type(treeLeftid_mem_4350_ext) in [np.ndarray,
+                                                 cl.array.Array]) and (treeLeftid_mem_4350_ext.dtype == np.int32)), "Parameter has unexpected type"
+      sizze_4278 = np.int32(treeLeftid_mem_4350_ext.shape[0])
+      treeLeftid_mem_sizze_4349 = np.int64(treeLeftid_mem_4350_ext.nbytes)
+      if (type(treeLeftid_mem_4350_ext) == cl.array.Array):
+        treeLeftid_mem_4350 = treeLeftid_mem_4350_ext.data
+      else:
+        treeLeftid_mem_4350 = opencl_alloc(self, treeLeftid_mem_sizze_4349,
+                                           "treeLeftid_mem_4350")
+        if (treeLeftid_mem_sizze_4349 != 0):
+          cl.enqueue_copy(self.queue, treeLeftid_mem_4350,
+                          normaliseArray(treeLeftid_mem_4350_ext),
+                          is_blocking=synchronous)
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #0 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("[]i32",
+                                                                                                                            type(treeLeftid_mem_4350_ext),
+                                                                                                                            treeLeftid_mem_4350_ext))
+    try:
+      assert ((type(treeRightid_mem_4352_ext) in [np.ndarray,
+                                                  cl.array.Array]) and (treeRightid_mem_4352_ext.dtype == np.int32)), "Parameter has unexpected type"
+      sizze_4279 = np.int32(treeRightid_mem_4352_ext.shape[0])
+      treeRightid_mem_sizze_4351 = np.int64(treeRightid_mem_4352_ext.nbytes)
+      if (type(treeRightid_mem_4352_ext) == cl.array.Array):
+        treeRightid_mem_4352 = treeRightid_mem_4352_ext.data
+      else:
+        treeRightid_mem_4352 = opencl_alloc(self, treeRightid_mem_sizze_4351,
+                                            "treeRightid_mem_4352")
+        if (treeRightid_mem_sizze_4351 != 0):
+          cl.enqueue_copy(self.queue, treeRightid_mem_4352,
+                          normaliseArray(treeRightid_mem_4352_ext),
+                          is_blocking=synchronous)
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #1 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("[]i32",
+                                                                                                                            type(treeRightid_mem_4352_ext),
+                                                                                                                            treeRightid_mem_4352_ext))
+    try:
+      assert ((type(treeFeature_mem_4354_ext) in [np.ndarray,
+                                                  cl.array.Array]) and (treeFeature_mem_4354_ext.dtype == np.int32)), "Parameter has unexpected type"
+      sizze_4280 = np.int32(treeFeature_mem_4354_ext.shape[0])
+      treeFeature_mem_sizze_4353 = np.int64(treeFeature_mem_4354_ext.nbytes)
+      if (type(treeFeature_mem_4354_ext) == cl.array.Array):
+        treeFeature_mem_4354 = treeFeature_mem_4354_ext.data
+      else:
+        treeFeature_mem_4354 = opencl_alloc(self, treeFeature_mem_sizze_4353,
+                                            "treeFeature_mem_4354")
+        if (treeFeature_mem_sizze_4353 != 0):
+          cl.enqueue_copy(self.queue, treeFeature_mem_4354,
+                          normaliseArray(treeFeature_mem_4354_ext),
+                          is_blocking=synchronous)
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #2 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("[]i32",
+                                                                                                                            type(treeFeature_mem_4354_ext),
+                                                                                                                            treeFeature_mem_4354_ext))
+    try:
+      assert ((type(treeThres_or_leaf_mem_4356_ext) in [np.ndarray,
+                                                        cl.array.Array]) and (treeThres_or_leaf_mem_4356_ext.dtype == np.float32)), "Parameter has unexpected type"
+      sizze_4281 = np.int32(treeThres_or_leaf_mem_4356_ext.shape[0])
+      treeThres_or_leaf_mem_sizze_4355 = np.int64(treeThres_or_leaf_mem_4356_ext.nbytes)
+      if (type(treeThres_or_leaf_mem_4356_ext) == cl.array.Array):
+        treeThres_or_leaf_mem_4356 = treeThres_or_leaf_mem_4356_ext.data
+      else:
+        treeThres_or_leaf_mem_4356 = opencl_alloc(self,
+                                                  treeThres_or_leaf_mem_sizze_4355,
+                                                  "treeThres_or_leaf_mem_4356")
+        if (treeThres_or_leaf_mem_sizze_4355 != 0):
+          cl.enqueue_copy(self.queue, treeThres_or_leaf_mem_4356,
+                          normaliseArray(treeThres_or_leaf_mem_4356_ext),
+                          is_blocking=synchronous)
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #3 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("[]f32",
+                                                                                                                            type(treeThres_or_leaf_mem_4356_ext),
+                                                                                                                            treeThres_or_leaf_mem_4356_ext))
+    try:
+      assert ((type(Xtest_mem_4358_ext) in [np.ndarray,
+                                            cl.array.Array]) and (Xtest_mem_4358_ext.dtype == np.float32)), "Parameter has unexpected type"
+      sizze_4282 = np.int32(Xtest_mem_4358_ext.shape[0])
+      Xtest_mem_sizze_4357 = np.int64(Xtest_mem_4358_ext.nbytes)
+      if (type(Xtest_mem_4358_ext) == cl.array.Array):
+        Xtest_mem_4358 = Xtest_mem_4358_ext.data
+      else:
+        Xtest_mem_4358 = opencl_alloc(self, Xtest_mem_sizze_4357,
+                                      "Xtest_mem_4358")
+        if (Xtest_mem_sizze_4357 != 0):
+          cl.enqueue_copy(self.queue, Xtest_mem_4358,
+                          normaliseArray(Xtest_mem_4358_ext),
+                          is_blocking=synchronous)
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #4 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("[]f32",
+                                                                                                                            type(Xtest_mem_4358_ext),
+                                                                                                                            Xtest_mem_4358_ext))
+    try:
+      nXtest_4289 = np.int32(ct.c_int32(nXtest_4289_ext))
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #5 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
+                                                                                                                            type(nXtest_4289_ext),
+                                                                                                                            nXtest_4289_ext))
+    try:
+      dXtest_4290 = np.int32(ct.c_int32(dXtest_4290_ext))
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #6 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
+                                                                                                                            type(dXtest_4290_ext),
+                                                                                                                            dXtest_4290_ext))
+    try:
+      assert ((type(indices_mem_4360_ext) in [np.ndarray,
+                                              cl.array.Array]) and (indices_mem_4360_ext.dtype == np.int32)), "Parameter has unexpected type"
+      sizze_4283 = np.int32(indices_mem_4360_ext.shape[0])
+      indices_mem_sizze_4359 = np.int64(indices_mem_4360_ext.nbytes)
+      if (type(indices_mem_4360_ext) == cl.array.Array):
+        indices_mem_4360 = indices_mem_4360_ext.data
+      else:
+        indices_mem_4360 = opencl_alloc(self, indices_mem_sizze_4359,
+                                        "indices_mem_4360")
+        if (indices_mem_sizze_4359 != 0):
+          cl.enqueue_copy(self.queue, indices_mem_4360,
+                          normaliseArray(indices_mem_4360_ext),
+                          is_blocking=synchronous)
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #7 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("[]i32",
+                                                                                                                            type(indices_mem_4360_ext),
+                                                                                                                            indices_mem_4360_ext))
+    try:
+      dindices_4292 = np.int32(ct.c_int32(dindices_4292_ext))
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #8 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
+                                                                                                                            type(dindices_4292_ext),
+                                                                                                                            dindices_4292_ext))
+    try:
+      prediction_type_4293 = np.int32(ct.c_int32(prediction_type_4293_ext))
+    except (TypeError, AssertionError) as e:
+      raise TypeError("Argument #9 has invalid value\nFuthark type: {}\nArgument has Python type {} and value: {}\n".format("i32",
+                                                                                                                            type(prediction_type_4293_ext),
+                                                                                                                            prediction_type_4293_ext))
+    (out_memsizze_4366, out_mem_4365,
+     out_arrsizze_4367) = self.futhark_main(treeLeftid_mem_sizze_4349,
+                                            treeLeftid_mem_4350,
+                                            treeRightid_mem_sizze_4351,
+                                            treeRightid_mem_4352,
+                                            treeFeature_mem_sizze_4353,
+                                            treeFeature_mem_4354,
+                                            treeThres_or_leaf_mem_sizze_4355,
+                                            treeThres_or_leaf_mem_4356,
+                                            Xtest_mem_sizze_4357,
+                                            Xtest_mem_4358,
+                                            indices_mem_sizze_4359,
+                                            indices_mem_4360, sizze_4278,
+                                            sizze_4279, sizze_4280, sizze_4281,
+                                            sizze_4282, sizze_4283, nXtest_4289,
+                                            dXtest_4290, dindices_4292,
+                                            prediction_type_4293)
+    return cl.array.Array(self.queue, (out_arrsizze_4367,), ct.c_int32,
+                          data=out_mem_4365)
