@@ -16,16 +16,6 @@ let TREE_CHILD_ID_NOT_SET: i32 = 0
 let PREDICTION_TYPE_NORMAL: i32 = 0
 let PREDICTION_TYPE_LEAVES_IDS: i32 = 1
 
-let get_data_row_starts [Xlength] [indlength]
-      (Xtest: [Xlength]f64)
-      (indices: [indlength]i32)
-      (dindices: i32)
-      (dXtest: i32)
-      (i: i32) : i32 =
-  let idx = if dindices > 0 then indices[i] else i
-  let row_start = idx * dXtest
-  in row_start
-
 let main [treelength] [Xlength] [indlength]
       (treeLeftid : [treelength]i32)
       (treeRightid : [treelength]i32)
@@ -36,27 +26,20 @@ let main [treelength] [Xlength] [indlength]
       (dXtest : i32)
       (indices: [indlength]i32)
       (dindices : i32)
-      (prediction_type : i32)
-      (depth: i32) : []i32 =
+      (prediction_type : i32) : []i32 =
 
   -- set number of predictions as size of test data or number of indices
   let n_preds = if dindices > 0 then dindices else nXtest
-  let indices' = if dindices > 0 then indices else (iota nXtest)
-  let data_row_starts = (map (get_data_row_starts Xtest indices' dindices dXtest) (iota n_preds))
 
   --
-  let nodes = loop node_array = (replicate n_preds 0) for row in iota(depth) do
-            map (\ (node_id, data_row_start) ->
-                 if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) (zip node_array data_row_starts)
-  in nodes
-
---          unsafe map (\ i ->
---          let idx = if dindices > 0 then indices[i] else i
---          let row_start = idx * dXtest
---          in loop node_id = TREE_ROOT_ID = while treeLeftid[node_id] != TREE_CHILD_ID_NOT_SET do
---                      if Xtest[row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]
---                     ) (iota n_preds)
---  in predictions
+  let predictions =
+          unsafe map (\ i ->
+          let idx = if dindices > 0 then indices[i] else i
+          let row_start = idx * dXtest
+          in loop node_id = TREE_ROOT_ID = while treeLeftid[node_id] != TREE_CHILD_ID_NOT_SET do
+                      if Xtest[row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]
+                     ) (iota n_preds)
+  in predictions
 
 
 --          let predictions[i] = if prediction_type == PREDICTION_TYPE_NORMAL
