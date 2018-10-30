@@ -45,7 +45,8 @@ let main [treelength] [Xlength] [indlength]
   let data_row_starts = (unsafe map (get_data_row_starts Xtest indices dindices dXtest) (iota n_preds))
 
   --
-  let nodes = loop (node_array = (replicate n_preds 0)) = for row in iota(depth) do
+  let node_array = replicate n_preds 0
+  let nodes = loop node_array for row in iota(depth) do
             unsafe map (\ (node_id, data_row_start) ->
                  if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) (zip node_array data_row_starts)
   in nodes
