@@ -41,8 +41,8 @@ let main [treelength] [Xlength] [indlength]
 
   -- set number of predictions as size of test data or number of indices
   let n_preds = if dindices > 0 then dindices else nXtest
-  let indices' = if dindices > 0 then indices else (iota nXtest)
-  let data_row_starts = (unsafe map (get_data_row_starts Xtest indices' dindices dXtest) (iota n_preds))
+  --let indices' = if dindices > 0 then indices else (iota nXtest)
+  let data_row_starts = (unsafe map (get_data_row_starts Xtest indices dindices dXtest) (iota n_preds))
 
   --
   let nodes = loop node_array = (replicate n_preds 0) for row in iota(depth) do
