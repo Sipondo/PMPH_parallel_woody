@@ -1,4 +1,4 @@
-import "lib/github.com/diku-dk/sorts/insertion_sort"
+import "lib/github.com/diku-dk/sorts/radix_sort"
 
 let TREE_ROOT_ID: i32 = 0
 let TREE_CHILD_ID_NOT_SET: i32 = 0
@@ -44,5 +44,5 @@ let main [treelength] [Xlength] [indlength]
                     in (unsafe filter is_not_leaf new_nodes,
                         leaves ++ (unsafe filter is_leaf new_nodes))
   -- Won't work with indices!
-  let result = map (\ (a, _) -> a) (insertion_sort (\ (_, a) (_, b) -> a <= b) leaves)
+                    let result = map (\ (a, _) -> a) (radix_sort_by_key (\ (_, a) -> a) i32.num_bits i32.get_bit leaves)
   in result
