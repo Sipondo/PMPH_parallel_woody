@@ -46,10 +46,17 @@ let main [treelength] [Xlength] [indlength]
 
   --
   let node_array = replicate n_preds 0
-  let nodes = loop node_array for row in iota(depth) do
-            unsafe map (\ (node_id, data_row_start) ->
-                 if (treeLeftid[node_id] != 0) then (if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) else node_id) (zip node_array data_row_starts)
-  in nodes
+  let is_not_leaf = (\ (node_id, _) -> treeLeftid[node_id] != 0)
+  let is_leaf = (\ (node_id, _) -> treeLeftid[node_id] == 0)
+  let next_node = (\ (node_id, data_row_start) ->
+                   ((if (is_not_leaf (node_id, data_row_start)) then (if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) else node_id), data_row_start))
+  let nodes = zip node_array data_row_starts
+  let leaves = replicate n_preds (0, 0)
+  let (_, leaves) = loop (nodes, leaves) for row in iota(depth) do
+                        (filter is_not_leaf (unsafe map next_node nodes),
+                         leaves ++ (filter is_leaf nodes))
+  let result = map (\ (a, _) -> a) leaves
+  in result
 
 --          unsafe map (\ i ->
 --          let idx = if dindices > 0 then indices[i] else i
