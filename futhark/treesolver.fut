@@ -41,8 +41,8 @@ let main [treelength] [Xlength] [indlength]
   let leaves = []
   let (_, leaves) = loop (nodes, leaves) for row in iota(depth) do
                     let new_nodes = (unsafe map next_node nodes)
-                    in (filter is_not_leaf new_nodes,
-                        leaves ++ (filter is_leaf new_nodes))
+                    in (unsafe filter is_not_leaf new_nodes,
+                        leaves ++ (unsafe filter is_leaf new_nodes))
   -- Won't work with indices!
   let result = map (\ (a, _) -> a) (insertion_sort (\ (_, a) (_, b) -> a <= b) leaves)
   in result
