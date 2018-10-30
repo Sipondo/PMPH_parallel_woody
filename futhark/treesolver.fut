@@ -51,10 +51,11 @@ let main [treelength] [Xlength] [indlength]
   let next_node = (\ (node_id, data_row_start) ->
                    ((if (is_not_leaf (node_id, data_row_start)) then (if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) else node_id), data_row_start))
   let nodes = zip node_array data_row_starts
-  let leaves = replicate n_preds (0, 0)
+  let leaves = []
   let (_, leaves) = loop (nodes, leaves) for row in iota(depth) do
-                        (filter is_not_leaf (unsafe map next_node nodes),
-                         leaves ++ (filter is_leaf nodes))
+                    let new_nodes = (unsafe map next_node nodes)
+                    in (filter is_not_leaf new_nodes,
+                        leaves ++ (filter is_leaf new_nodes))
   let result = map (\ (a, _) -> a) leaves
   in result
 
