@@ -4,7 +4,7 @@ import random
 amount_of_features = 50
 amount_of_queries = 100
 max_depth = 100
-grow_odds = 30
+grow_odds = 30.0
 
 features = [i for i in range(amount_of_features)]
 queries = []
@@ -60,6 +60,14 @@ with open("artificial_tree",'w') as file:
         0,
         nodes[len(nodes)-1][1]))
 
+
+'{} {} {} {} {} {}'.format(\
+    amount_of_queries,
+    amount_of_features,
+    "empty(i32)",
+    0,
+    0,
+    nodes[len(nodes)-1][1])
 #
 # class Node:
 #     __init__(self, depth):
