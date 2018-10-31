@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="253px" preserveAspectRatio="none" style="width:179px;height:253px;" version="1.1" viewBox="0 0 179 253"
+    width="179px" zoomAndPan="magnify"><defs><filter height="300%" id="f1byrig6rhqera" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><ellipse cx="67" cy="18" fill="#000000" filter="url(#f1byrig6rhqera)" rx="10" ry="10" style="stroke: none; stroke-width: 1.0;"/><polygon fill="#FEFECE" filter="url(#f1byrig6rhqera)" points="67,68,79,80,67,92,55,80,67,68" style="stroke: #A80036; stroke-width: 1.5;"/><rect fill="#FEFECE" filter="url(#f1byrig6rhqera)" height="35.0938" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="60" x="6" y="132"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="40" x="16" y="154.457">Node 2</text><polygon fill="#FEFECE" filter="url(#f1byrig6rhqera)" points="98,137.5,110,149.5,98,161.5,86,149.5,98,137.5" style="stroke: #A80036; stroke-width: 1.5;"/><rect fill="#FEFECE" filter="url(#f1byrig6rhqera)" height="35.0938" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="60" x="28" y="207"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="40" x="38" y="229.457">Node 4</text><rect fill="#FEFECE" filter="url(#f1byrig6rhqera)" height="35.0938" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="60" x="108" y="207"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="40" x="118" y="229.457">Node 5</text><!--link start to #3--><path d="M67,28.113 C67,37.241 67,51.49 67,62.591 " fill="none" id="start-#3" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="67,67.752,71,58.752,67,62.752,63,58.752,67,67.752" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="34" x="25.1375" y="57.6933">Node 1</text><!--link #3 to Node 2--><path d="M63.4439,88.743 C59.1663,98.057 51.8093,114.077 45.7887,127.186 " fill="none" id="#3-Node 2" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="43.6393,131.866,51.0309,125.3572,45.7264,127.3224,43.7612,122.0179,43.6393,131.866" style="stroke: #A80036; stroke-width: 1.0;"/><!--link #3 to #8--><path d="M70.5561,88.743 C75.8818,100.34 85.981,122.33 92.3312,136.157 " fill="none" id="#3-#8" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="94.4854,140.847,94.3635,130.9989,92.3983,136.3034,87.0938,134.3382,94.4854,140.847" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="34" x="105.6109" y="127.1095">Node 3</text><!--link #8 to Node 4--><path d="M94.0184,157.7664 C88.3594,168.0941 77.7627,187.4332 69.5222,202.472 " fill="none" id="#8-Node 4" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="67.0485,206.9865,74.8813,201.0159,69.4512,202.6016,67.8655,197.1716,67.0485,206.9865" style="stroke: #A80036; stroke-width: 1.0;"/><!--link #8 to Node 5--><path d="M101.9816,157.7664 C107.641,168.0941 118.237,187.4332 126.478,202.472 " fill="none" id="#8-Node 5" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="128.951,206.9865,128.1335,197.1716,126.548,202.6018,121.1179,201.0164,128.951,206.9865" style="stroke: #A80036; stroke-width: 1.0;"/><!--
+@startuml
+(*) - -> if "Node 1" then
+  - -> "Node 2"
+else
+  if "Node 3" then
+    - -> "Node 4"
+  else
+    - -> "Node 5"
+  endif
+endif
+
+@enduml
+
+PlantUML version 1.2018.01(Sun Jan 28 19:08:22 CET 2018)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 9.0.4+11
+Operating System: Windows 10
+OS Version: 10.0
+Default Encoding: Cp1252
+Language: en
+Country: GB
+--></g></svg>
