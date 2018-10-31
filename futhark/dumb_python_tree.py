@@ -4,7 +4,7 @@ import random
 amount_of_features = 50
 amount_of_queries = 100
 max_depth = 100
-grow_odds = 50
+grow_odds = 30
 
 features = [i for i in range(amount_of_features)]
 queries = []
@@ -23,7 +23,7 @@ for i in range(amount_of_queries):
 #Generate tree
 
 for node in nodes:
-    if (random.random()<(grow_odds/len(nodes))) and (node[1]<max_depth):
+    if (random.random()<(grow_odds/(node[1]+grow_odds))) and (node[1]<max_depth):
 
         #Spawn left node
         leftid.append(len(nodes))
