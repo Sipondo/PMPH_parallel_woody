@@ -64,4 +64,4 @@ let main [treelength] [Xlength] [indlength]
   let repeatedRight = flatten (replicate nXtest treeRightid)
   let directions = map3 left_or_right threshold_result repeatedLeft repeatedRight
 
-  in map traverse (unflatten nXtest treelength directions)
+  in unsafe map traverse (unflatten nXtest treelength directions)
