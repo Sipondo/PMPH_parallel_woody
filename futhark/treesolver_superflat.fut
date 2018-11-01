@@ -46,11 +46,22 @@ let main [treelength] [Xlength] [indlength]
   let n_preds = if dindices > 0 then dindices else nXtest
   let data_row_starts = (unsafe map (get_data_row_starts Xtest indices dindices dXtest) (iota n_preds))
 
-  let nodes = zip4 treeLeftid treeRightid treeFeature treeThres_or_leaf
-  let rows = unflatten nXtest dXtest Xtest --loop row for i in (steps 0 dXtest (nXtest - dXtest)) do
-             --row ++ [take dXtest (drop i Xtest)]
-  let trees = (replicate n_preds nodes)
+  --let data_by_criterium = map (\ (node, query) -> Xtest[query + treeFeature[node]]) (zip (iota treelength) (flatten (replicate nXtest data_row_starts)))
+  let rows = unflatten nXtest dXtest Xtest
+--  let data_by_criterium = map (\ node ->
+--                               let criterium_row = replicate dXtest 0
+  --                               scatter criterium_row row treeFeature) node
+  let repeated_criteria = flatten (replicate nXtest treeFeature)
+  let repeated_offsets = flatten (map (\ i -> replicate treelength i) (steps 0 nXtest dXtest))
+  let flcr = map2 (+) repeated_offsets repeated_criteria
+--                                        let criterium_empty = replicate treelength (0:f64)
+--                                        in scatter criterium_empty treeFeature row) rows)
+  --let unflat_dbc = scatter
+  let scattered_features = unsafe map (\ i -> Xtest[i]) flcr
+  let threshold_result = map2 (<=) scattered_features (flatten (replicate nXtest treeThres_or_leaf))
+  let left_or_right = (\ b l r -> if b then l else r)
+  let repeatedLeft = flatten (replicate nXtest treeLeftid)
+  let repeatedRight = flatten (replicate nXtest treeRightid)
+  let directions = map3 left_or_right threshold_result repeatedLeft repeatedRight
 
-  let next_nodes = unsafe map make_next_tree (zip trees rows)
-
-  in unsafe map traverse next_nodes
+  in map traverse (unflatten nXtest treelength directions)
