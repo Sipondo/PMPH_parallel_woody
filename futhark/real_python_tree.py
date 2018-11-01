@@ -22,7 +22,7 @@ data_values["right_ids"]
 
 
 with open(os.path.join("futhark","trees", query_file)) as file:
-    for line in file.readlines():
+    for line in file.readlines()[:1000]:
         amount_of_queries += 1
         query_values.extend([int(i) for i in line.split(",")])
         amount_of_features = len(line)
