@@ -22,7 +22,7 @@ data_values["right_ids"]
 
 
 with open(os.path.join("futhark","trees", query_file)) as file:
-    for line in file.readlines()[:1000]:
+    for line in file.readlines()[:50000]:
         amount_of_queries += 1
         query_values.extend([int(i) for i in line.split(",")])
         amount_of_features = len(line)
@@ -40,7 +40,7 @@ for node in nodes:
         nodes.append((data_values["right_ids"][node[0]],node[1]+1))
 
 #Write the file
-with open("real_tree",'w') as file:
+with open(os.path.join("futhark","real_tree"),'w') as file:
     file.write('{} {} {} {} {} {} {} {} {} {} {}'.format(\
         str(data_values["left_ids"]),
         str(data_values["right_ids"]),
