@@ -1,5 +1,3 @@
-import "lib/github.com/diku-dk/sorts/radix_sort"
-
 let TREE_ROOT_ID: i32 = 0
 let TREE_CHILD_ID_NOT_SET: i32 = 0
 let PREDICTION_TYPE_NORMAL: i32 = 0
@@ -48,9 +46,7 @@ let main [treelength] [Xlength] [indlength]
   let data_row_starts = (unsafe map (get_data_row_starts Xtest indices dindices dXtest) (iota n_preds))
 
   let nodes = zip4 treeLeftid treeRightid treeFeature treeThres_or_leaf
-  let rows = unflatten nXtest dXtest Xtest --loop row for i in (steps 0 dXtest (nXtest - dXtest)) do
-             --row ++ [take dXtest (drop i Xtest)]
-  --let trees = (replicate n_preds nodes)
+  let rows = unflatten nXtest dXtest Xtest
 
   let next_nodes = unsafe map (make_next_tree nodes) rows
 
