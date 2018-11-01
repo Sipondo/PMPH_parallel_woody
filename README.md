@@ -13,12 +13,20 @@ https://futhark-lang.org/blog/2016-04-15-futhark-and-pyopencl.html
 - [x] Find out how to call futhark from python (use pyopencl)
 - [x] Call futhark from woody  
 - [x] Export a fitted tree to a format we can use as input in futhark
-- [ ] Visualise Futhark input data
+- [x] Visualise Futhark input data
+- [x] Create artificial tree generator
+- [x] Convert woody data into futhark data
 * GPU-Nodes  
 - [x] Get woody running on the nodes
 - [x] Compile treesolver/math example into "something python"  
+- [x] Generate 'very big' trees
+- [ ] Run futhark within Woody
 * Futhark  
-- [ ] Flattening -> Figure out what to flatten
+- [x] Flattening -> Figure out what to flatten
+- [x] Write basic version
+- [x] Write flattened version
+- [x] Write pruned version
+- [ ] Write double-flattened version
 
 
 # How to install Woody
