@@ -53,4 +53,4 @@ let main [treelength] [Xlength] [indlength]
 
   let next_nodes = unsafe map make_next_tree (zip trees rows)
 
-  in map traverse next_nodes
+  in unsafe map traverse next_nodes
