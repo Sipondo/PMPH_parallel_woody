@@ -1,4 +1,7 @@
 @startuml
+
+
+partition Map {
 (*) --> if "Node 1" then
   --> "Node 2"
 else
@@ -8,5 +11,7 @@ else
     --> "Node 5"
   endif
 endif
+}
+
 
 @enduml
