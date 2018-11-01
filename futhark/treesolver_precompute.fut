@@ -51,6 +51,6 @@ let main [treelength] [Xlength] [indlength]
              --row ++ [take dXtest (drop i Xtest)]
   let trees = (replicate n_preds nodes)
 
-  let next_nodes = map make_next_tree (zip trees rows)
+  let next_nodes = unsafe map make_next_tree (zip trees rows)
 
   in map traverse next_nodes
