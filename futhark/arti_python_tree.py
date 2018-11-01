@@ -1,8 +1,9 @@
 import numpy
 import random
+import os
 
-amount_of_features = 50
-amount_of_queries = 100
+amount_of_features = 128
+amount_of_queries = 50000
 max_depth = 100
 grow_odds = 30.0
 
