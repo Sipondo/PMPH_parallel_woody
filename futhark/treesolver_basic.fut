@@ -26,7 +26,8 @@ let main [treelength] [Xlength] [indlength]
       (dXtest : i32)
       (indices: [indlength]i32)
       (dindices : i32)
-      (prediction_type : i32) : []i32 =
+      (prediction_type : i32)
+      (depth: i32) : []i32 =
 
   -- set number of predictions as size of test data or number of indices
   let n_preds = if dindices > 0 then dindices else nXtest
