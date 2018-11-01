@@ -21,7 +21,8 @@ let next_node
   if row[feature] <= thres then left else right
 
 let make_next_tree
-   ((tree, row) : ([](i32, i32, i32, f64), []f64)) : []i32 =
+   (tree: [](i32, i32, i32, f64))
+   (row : []f64) : []i32 =
    map (next_node row) tree
 
 let traverse
@@ -49,8 +50,8 @@ let main [treelength] [Xlength] [indlength]
   let nodes = zip4 treeLeftid treeRightid treeFeature treeThres_or_leaf
   let rows = unflatten nXtest dXtest Xtest --loop row for i in (steps 0 dXtest (nXtest - dXtest)) do
              --row ++ [take dXtest (drop i Xtest)]
-  let trees = (replicate n_preds nodes)
+  --let trees = (replicate n_preds nodes)
 
-  let next_nodes = unsafe map make_next_tree (zip trees rows)
+  let next_nodes = unsafe map (make_next_tree nodes) rows
 
   in unsafe map traverse next_nodes
