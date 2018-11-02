@@ -2,10 +2,12 @@ import numpy
 import random
 import os
 
-amount_of_features = 128
+amount_of_features = 64
 amount_of_queries = 50000
 max_depth = 100
 grow_odds = 30.0
+
+treesizes = [2500, 5000, 10000, 20000, 30000, 40000, 50000]
 
 features = [i for i in range(amount_of_features)]
 queries = []
@@ -47,29 +49,32 @@ for node in nodes:
         feature_of_node.append(0)
 
 #Write the file
-with open("artificial_tree",'w') as file:
-    file.write('{} {} {} {} {} {} {} {} {} {} {}'.format(\
-        str(leftid),
-        str(rightid),
-        str(feature_of_node),
-        str(threshold_or_leaf),
-        str(queries),
-        amount_of_queries,
-        amount_of_features,
-        "empty(i32)",
-        0,
-        0,
-        nodes[len(nodes)-1][1]))
+for tree_size in treesizes:
+    with open("artificial_tree_"+str(tree_size),'w') as file:
+        file.write('{} {} {} {} {} {} {} {} {} {} {}'.format(\
+            str(leftid),
+            str(rightid),
+            str(feature_of_node),
+            str(threshold_or_leaf),
+            str(queries[:tree_size*amount_of_features]),
+            tree_size,
+            amount_of_features,
+            "empty(i32)",
+            0,
+            0,
+            nodes[len(nodes)-1][1]))
 
 
-'{} {} {} {} {} {}'.format(\
-    amount_of_queries,
-    amount_of_features,
-    "empty(i32)",
-    0,
-    0,
-    nodes[len(nodes)-1][1])
+
 #
+# '{} {} {} {} {} {}'.format(\
+#     amount_of_queries,
+#     amount_of_features,
+#     "empty(i32)",
+#     0,
+#     0,
+#     nodes[len(nodes)-1][1])
+# #
 # class Node:
 #     __init__(self, depth):
 #         self.depth = depth
