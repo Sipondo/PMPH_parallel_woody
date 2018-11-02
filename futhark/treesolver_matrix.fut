@@ -1,5 +1,3 @@
-import "lib/github.com/diku-dk/sorts/radix_sort"
-
 let TREE_ROOT_ID: i32 = 0
 let TREE_CHILD_ID_NOT_SET: i32 = 0
 let PREDICTION_TYPE_NORMAL: i32 = 0

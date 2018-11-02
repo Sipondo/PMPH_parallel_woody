@@ -13,22 +13,6 @@ let get_data_row_starts [Xlength] [indlength]
   let row_start = idx * dXtest
   in row_start
 
-let next_node
-  (row: []f64)
-  ((left, right, feature, thres) : (i32, i32, i32, f64)) : i32 =
-  if row[feature] <= thres then left else right
-
-let make_next_tree
-   (tree: [](i32, i32, i32, f64))
-   (row : []f64) : []i32 =
-   map (next_node row) tree
-
-let traverse
-   (next_nodes: []i32): i32 =
-   let (last, current) = (0, next_nodes[0])
-   let (result, _) = loop (last, current) while current != 0 do (current, next_nodes[current])
-   in result
-
 let main [treelength] [Xlength] [indlength]
       (treeLeftid : [treelength]i32)
       (treeRightid : [treelength]i32)
@@ -45,9 +29,8 @@ let main [treelength] [Xlength] [indlength]
   let n_preds = if dindices > 0 then dindices else nXtest
   let data_row_starts = (unsafe map (get_data_row_starts Xtest indices dindices dXtest) (iota n_preds))
 
-  let nodes = zip4 treeLeftid treeRightid treeFeature treeThres_or_leaf
-  let rows = unflatten nXtest dXtest Xtest
-
-  let next_nodes = unsafe map (make_next_tree nodes) rows
-
-  in unsafe map traverse next_nodes
+  let node_array = replicate n_preds 0
+  let nodes = loop node_array for row in iota(depth) do
+            unsafe map (\ (node_id, data_row_start) ->
+                 if (treeLeftid[node_id] != 0) then (if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) else node_id) (zip node_array data_row_starts)
+              in nodes
