@@ -1,17 +1,15 @@
 @startuml
 
-
-partition Map {
-(*) --> if "Node 1" then
-  --> "Node 2"
+(*) --> if "" then
+  --> "Node 1"
 else
-  if "Node 3" then
-    --> "Node 4"
-  else
-    --> "Node 5"
-  endif
+  ..> "Node 2"
 endif
-}
 
+"Node 2" --> if "" then
+    ..> "Node 3"
+  else
+    --> "Node 4"
+  endif
 
 @enduml
