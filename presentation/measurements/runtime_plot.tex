@@ -1,0 +1,89 @@
+\begin{tikzpicture}[thick,scale=0.7, every node/.style={scale=0.7}]
+  \begin{axis}[
+    title={Microseconds used predicting a single tree as average of 10 runs},
+    title style = {xshift=-2cm, font=\bfseries},
+    width  = \textwidth,
+    height = 8cm,
+    major x tick style = transparent,
+    ybar=2*\pgflinewidth,
+    bar width=5pt,
+    ymajorgrids = true,
+    ylabel = {Microseconds},
+    symbolic x coords={1000, 10000, 100000, 200000, 300000, 400000},
+    xtick = data,
+    xlabel = {Train data size},
+    scaled y ticks = false,
+    enlarge x limits=0.10,
+    ymin=0,
+    legend columns=3,
+    legend cell align=left,
+    legend pos =outer north,
+    legend style={
+      at={(0.5,1.35)},
+      anchor=north,
+      column sep=1ex
+    }
+    ]
+% cpu predict
+    \addplot[style={bblue,fill=bblue,mark=none}]
+    coordinates {
+      (1000,   24751)
+      (10000,  27794)
+      (100000, 30553)
+      (200000, 29728)
+      (300000, 33381)
+      (400000, 34311)
+    };
+% treesolve basic
+    \addplot[style={rred,fill=rred,mark=none}]
+    coordinates {
+      (1000,   532 )
+      (10000,  781 )
+      (100000, 934 )
+      (200000, 1038)
+      (300000, 1308)
+      (400000, 1386)
+    };
+    % treesolve layer
+    \addplot[style={yyellow,fill=yyellow,mark=none}]
+    coordinates {
+      (1000,   738)
+      (10000,  1171)
+      (100000,  1430)
+      (200000,  1717)
+      (300000, 1983)
+      (400000, 1993)
+    };
+% treesolve filter
+    \addplot[style={llightblue,fill=llightblue,mark=none}]
+    coordinates {
+      (1000,   9925 )
+      (10000,  12096 )
+      (100000, 16039 )
+      (200000, 16886)
+      (300000, 18021)
+      (400000, 17960)
+    };
+% treesolve precompute
+    \addplot[style={ggreen,fill=ggreen,mark=none}]
+    coordinates {
+      (1000,   6923)
+      (10000,  0)
+      (100000, 0)
+      (200000, 0)
+      (300000, 0)
+      (400000, 0)
+    };
+% treesolve matrix
+\addplot[style={ppurple,fill=ppurple,mark=none}]
+coordinates {
+  (1000,   6924)
+  (10000,  0)
+  (100000, 0)
+  (200000, 0)
+  (300000, 0)
+  (400000, 0)
+};
+    \legend{cpu predict, treesolve basic, treesolve layer, treesolve filter, treesolve precompute, treesolve matrix}
+  \end{axis}
+\end{tikzpicture}
