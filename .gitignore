@@ -26,6 +26,9 @@ aux/
 *.fls
 *.fdb_latexmk
 *.pdf
+!tree_*.pdf
+!decision_node.pdf
+!presentation_*.pdf
 
 # Apple stuff
 .DS_Store

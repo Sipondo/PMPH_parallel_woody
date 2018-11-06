@@ -1,0 +1,15 @@
+@startuml
+
+(*) --> if "" then
+  --> "Node 1"
+else
+  ..> "Node 2"
+endif
+
+"Node 2" --> if "" then
+    ..> "Node 3"
+  else
+    --> "Node 4"
+  endif
+
+@enduml

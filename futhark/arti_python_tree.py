@@ -1,82 +1,87 @@
-import numpy
-import random
-import os
+    import numpy
+    import random
+    import os
 
-amount_of_features = 128
-amount_of_queries = 50000
-max_depth = 100
-grow_odds = 30.0
+    amount_of_features = 64
+    amount_of_queries = 50000
+    max_depth = 100
+    grow_odds = 10.0
 
-features = [i for i in range(amount_of_features)]
-queries = []
+    treesizes = [2500, 5000, 10000, 20000, 30000, 40000, 50000]
 
-nodes = [(0,0)]
-leftid = []
-rightid = []
-threshold_or_leaf = []
-feature_of_node = []
+    features = [i for i in range(amount_of_features)]
+    queries = []
 
-#Generate queries
-for i in range(amount_of_queries):
-    for feature in features:
-        queries.append(random.random())
+    nodes = [(0,0)]
+    leftid = []
+    rightid = []
+    threshold_or_leaf = []
+    feature_of_node = []
 
-#Generate tree
+    #Generate queries
+    for i in range(amount_of_queries):
+        for feature in features:
+            queries.append(random.random())
 
-for node in nodes:
-    if (random.random()<(grow_odds/(node[1]+grow_odds))) and (node[1]<max_depth):
+    #Generate tree
 
-        #Spawn left node
-        leftid.append(len(nodes))
-        nodes.append((len(nodes),node[1]+1))
+    for node in nodes:
+        if (random.random()<(grow_odds/(node[1]+grow_odds))) and (node[1]<max_depth):
 
-        #Spawn right node
-        rightid.append(len(nodes))
-        nodes.append((len(nodes),node[1]+1))
+            #Spawn left node
+            leftid.append(len(nodes))
+            nodes.append((len(nodes),node[1]+1))
 
-        #Add a random threshold
-        threshold_or_leaf.append(random.random())
+            #Spawn right node
+            rightid.append(len(nodes))
+            nodes.append((len(nodes),node[1]+1))
 
-        feature_of_node.append(random.choice(features))
+            #Add a random threshold
+            threshold_or_leaf.append(random.random())
 
-    else:
-        #If no nodes are spawned, we still need to append 0 to our children arrays
-        leftid.append(0)
-        rightid.append(0)
-        threshold_or_leaf.append(0.0)
-        feature_of_node.append(0)
+            feature_of_node.append(random.choice(features))
 
-#Write the file
-with open("artificial_tree",'w') as file:
-    file.write('{} {} {} {} {} {} {} {} {} {} {}'.format(\
-        str(leftid),
-        str(rightid),
-        str(feature_of_node),
-        str(threshold_or_leaf),
-        str(queries),
-        amount_of_queries,
-        amount_of_features,
-        "empty(i32)",
-        0,
-        0,
-        nodes[len(nodes)-1][1]))
+        else:
+            #If no nodes are spawned, we still need to append 0 to our children arrays
+            leftid.append(0)
+            rightid.append(0)
+            threshold_or_leaf.append(0.0)
+            feature_of_node.append(0)
+
+    #Write the file
+    for tree_size in treesizes:
+        with open("artificial_tree_"+str(tree_size),'w') as file:
+            file.write('{} {} {} {} {} {} {} {} {} {} {}'.format(\
+                str(leftid),
+                str(rightid),
+                str(feature_of_node),
+                str(threshold_or_leaf),
+                str(queries[:tree_size*amount_of_features]),
+                tree_size,
+                amount_of_features,
+                "empty(i32)",
+                0,
+                0,
+                nodes[len(nodes)-1][1]))
 
 
-'{} {} {} {} {} {}'.format(\
-    amount_of_queries,
-    amount_of_features,
-    "empty(i32)",
-    0,
-    0,
-    nodes[len(nodes)-1][1])
-#
-# class Node:
-#     __init__(self, depth):
-#         self.depth = depth
-#         self.thresh = 0.0
-#         generate_offspring()
-#
-#     generate_offspring(self):
-#         if depth<max_depth:
-#             if (random.rand(1.0) < grow_odds/depth):
-#                 self.thresh = random.rand(1.0)
+
+    #
+    # '{} {} {} {} {} {}'.format(\
+    #     amount_of_queries,
+    #     amount_of_features,
+    #     "empty(i32)",
+    #     0,
+    #     0,
+    #     nodes[len(nodes)-1][1])
+    # #
+    # class Node:
+    #     __init__(self, depth):
+    #         self.depth = depth
+    #         self.thresh = 0.0
+    #         generate_offspring()
+    #
+    #     generate_offspring(self):
+    #         if depth<max_depth:
+    #             if (random.rand(1.0) < grow_odds/depth):
+    #                 self.thresh = random.rand(1.0)
