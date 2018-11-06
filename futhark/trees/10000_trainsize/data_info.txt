@@ -1,0 +1,2 @@
+node_counter: 585
+n_allocated: 1024

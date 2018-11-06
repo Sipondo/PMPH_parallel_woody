@@ -1,0 +1,8 @@
+@startuml
+
+(*) --> if "V <= T" then
+    --> "False"
+    else
+    --> "True"
+endif
+@enduml

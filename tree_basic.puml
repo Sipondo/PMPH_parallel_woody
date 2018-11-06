@@ -1,0 +1,17 @@
+@startuml
+
+
+partition Map {
+(*) --> if "Node 1" then
+  --> "Node 2"
+else
+  if "Node 3" then
+    --> "Node 4"
+  else
+    --> "Node 5"
+  endif
+endif
+}
+
+
+@enduml

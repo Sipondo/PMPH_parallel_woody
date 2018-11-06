@@ -23,6 +23,9 @@ aux/
 *.mtc1
 *.out
 *.synctex.gz
+*.fls
+*.fdb_latexmk
+*.pdf
 
 # Apple stuff
 .DS_Store
