@@ -36,7 +36,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
-\lstset{basicstyle=\small}
+\lstset{basicstyle=\tiny}
 
 
 \allowdisplaybreaks
@@ -179,7 +179,7 @@ In order to pass the tree and test data from Woody to Futhark, we encoded each a
   \framesubtitle{Basic Futhark implementation}
   % \begin{lrbox}{\lstbox}
   \begin{minipage}{\textwidth}
-  \begin{lstlisting}[language=Haskell, breaklines]
+  \begin{lstlisting}[basicstyle=\tiny, language=Haskell, breaklines]
     unsafe map (\ i ->
     let idx = if dindices > 0 then indices[i] else i
     let row_start = idx * dXtest
@@ -236,7 +236,7 @@ In order to pass the tree and test data from Woody to Futhark, we encoded each a
   \frametitle{Writing Futhark}
   \framesubtitle{Layered Futhark implementation}
   \begin{minipage}{\textwidth}
-  \begin{lstlisting}[language=Haskell, breaklines]
+  \begin{lstlisting}[basicstyle=\tiny, language=Haskell, breaklines]
   loop node_array for row in iota(depth) do
       unsafe map (\ (node_id, data_row_start) ->
                    if (treeLeftid[node_id] != 0)
@@ -329,7 +329,7 @@ In order to pass the tree and test data from Woody to Futhark, we encoded each a
   \frametitle{Writing Futhark}
   \framesubtitle{Treesolver Precompute}
   \begin{minipage}{\textwidth}
-  \begin{lstlisting}[language=Haskell, breaklines]
+  \begin{lstlisting}[basicstyle=\tiny, language=Haskell, breaklines]
   let next_node
     (row: []f64)
     ((left, right, feature, thres) : (i32, i32, i32, f64)) : i32 =
@@ -400,18 +400,18 @@ In order to pass the tree and test data from Woody to Futhark, we encoded each a
   \framesubtitle{Treesolve Matrix}
 \subsection{Treesolve Matrix}
 \begin{minipage}{\textwidth}
-\begin{lstlisting}[language=Haskell, breaklines]
+\begin{lstlisting}[basicstyle=\tiny, language=Haskell, breaklines]
 let repeated_criteria = flatten (replicate nXtest treeFeature)
-  let repeated_offsets = flatten (map (\ i -> replicate treelength i) (steps 0 nXtest dXtest))
-  let flcr = map2 (+) repeated_offsets repeated_criteria
-  let scattered_features = unsafe map (\ i -> Xtest[i]) flcr
-  let threshold_result = map2 (<=) scattered_features (flatten (replicate nXtest treeThres_or_leaf))
-  let left_or_right = (\ b l r -> if b then l else r)
-  let repeatedLeft = flatten (replicate nXtest treeLeftid)
-  let repeatedRight = flatten (replicate nXtest treeRightid)
-  let directions = map3 left_or_right threshold_result repeatedLeft repeatedRight
+let repeated_offsets = flatten (map (\ i -> replicate treelength i) (steps 0 nXtest dXtest))
+let flcr = map2 (+) repeated_offsets repeated_criteria
+let scattered_features = unsafe map (\ i -> Xtest[i]) flcr
+let threshold_result = map2 (<=) scattered_features (flatten (replicate nXtest treeThres_or_leaf))
+let left_or_right = (\ b l r -> if b then l else r)
+let repeatedLeft = flatten (replicate nXtest treeLeftid)
+let repeatedRight = flatten (replicate nXtest treeRightid)
+let directions = map3 left_or_right threshold_result repeatedLeft repeatedRight
 
-  in unsafe map traverse (unflatten nXtest treelength directions)
+in unsafe map traverse (unflatten nXtest treelength directions)
 \end{lstlisting}
 \end{minipage}
 
