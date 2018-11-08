@@ -298,7 +298,7 @@ let leaves = []
 let (_, leaves) = loop (nodes, leaves) for row in iota(depth) do
                   let new_nodes = (unsafe map next_node nodes)
                   in (unsafe filter is_not_leaf new_nodes, leaves ++ (unsafe filter is_leaf new_nodes))
-                  let result = map (\ (a, _) -> a) (radix_sort_by_key (\ (_, a) -> a) i32.num_bits i32.get_bit leaves)
+let result = map (\ (a, _) -> a) (radix_sort_by_key (\ (_, a) -> a) i32.num_bits i32.get_bit leaves)
 in result
 \end{lstlisting}
 \end{minipage}
