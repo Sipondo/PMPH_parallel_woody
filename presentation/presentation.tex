@@ -292,13 +292,12 @@ let node_array = replicate n_preds 0
 let is_not_leaf = (\ (node_id, _) -> treeLeftid[node_id] != 0)
 let is_leaf = (\ (node_id, _) -> treeLeftid[node_id] == 0)
 let next_node = (\ (node_id, data_row_start) ->
-                 ((if (is_not_leaf (node_id, data_row_start)) then (if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) else node_id), data_row_start))
+                  ((if (is_not_leaf (node_id, data_row_start)) then (if Xtest[data_row_start + treeFeature[node_id]] <= treeThres_or_leaf[node_id] then treeLeftid[node_id] else treeRightid[node_id]) else node_id), data_row_start))
 let nodes = zip node_array data_row_starts
 let leaves = []
 let (_, leaves) = loop (nodes, leaves) for row in iota(depth) do
                   let new_nodes = (unsafe map next_node nodes)
-                  in (unsafe filter is_not_leaf new_nodes,
-                      leaves ++ (unsafe filter is_leaf new_nodes))
+                  in (unsafe filter is_not_leaf new_nodes, leaves ++ (unsafe filter is_leaf new_nodes))
                   let result = map (\ (a, _) -> a) (radix_sort_by_key (\ (_, a) -> a) i32.num_bits i32.get_bit leaves)
 in result
 \end{lstlisting}
