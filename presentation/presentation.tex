@@ -395,6 +395,7 @@ In order to pass the tree and test data from Woody to Futhark, we encoded each a
 % We found this approach was far better suited to using an idiomatic Futhark style and made the potential for parallelisation clearer by separating tree travsersal. Future work could consider better flattening this approach.
 
 \end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Writing Futhark}
   \framesubtitle{Treesolve Matrix}
@@ -440,31 +441,36 @@ in unsafe map traverse (unflatten nXtest treelength directions)
 \colorbox{lightgray}{\usebox\lstboxfive}
 
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Experiment}
   \framesubtitle{Experimental Setup}
 \section{Experiment}
 \subsection{Experimental Setup}
+\begin{itemize}
+\item Comparing with Woody
+\item Only the covtype dataset.
+\item Troubles with swig: Measurements may be impacted
+\end{itemize}
 
-To evaluate our Futhark implementation, we performed various comparisons with the woody implementation.
-
---Perhaps add an extra slide with an overview of the framework as an image?
-Itemize the tests--
-
-% To evaluate our Futhark implementation, we performed various comparisons with the woody implementation of \verb!cpu_query_tree!.
-%
-% All experiments were performed on a GPU node with two Intel(R) Xeon(R) CPU E5-2650 v2 processors at 2.60GHz (32 cores, 2 threads per core) and two GeForce GTX 780 Ti graphics cards.
-%
-% We wanted to both compare our predictions from Futhark to those from Woody and to measure and compare the runtimes with varying tree sizes and amount of predictions.
-% To accomplish this, we modified parts of the Woody codebase and wrote a set of python scripts\footnote{The scripts can be run to recreate our comparisons and measuring. They can be found here: https://github.com/HughMcGrade/woody/tree/master/experiments/parallel. Run \texttt{python launch.py} from the directory \texttt{experiments/parallel}}. that orchestrates the testing and measuring.
-% The scripts will generate and fit a forest based on the given training size and optional testing size, where testing size determines the number of predictions to be made. It will then do a large number of predictions with the first tree of the forest, using in turn woody and all of our Futhark programs. After measuring running times, all predictions from Futhark programs are compared to those from Woody.
-%
-%
-% We measure the runtime of the Woody implementation directly in Python. The runtimes of the Futhark programs are measured using the \verb!-t! argument to Futhark programs. This might give an unfair overhead to the woody implementation and make the result skewed towards the Futhark implementations. We call Futhark from Python through \verb!os.system()! instead of compiling our Futhark programs to Python modules and calling them directly from Python. Using modules might give a more practical measurement for comparisons.
-%
-% All programs are run 10 times and the average of those runtimes is used for the comparisons. The dataset used is the covtype dataset, already available in woody.
-
+Command to measure futhark code:
+%\begin{minipage}{\textwidth}
+\begin{lstlisting}[basicstyle=\tiny, language=Python, breaklines]
+  cat tmp_tree | ./futharkProgram -t measurements/futharkProgramTimes -r 10 > measurements/futharkProgram.txt
+\end{lstlisting}
+% \end{minipage}
+Measuring Woody:
+\begin{lstlisting}[basicstyle=\tiny, language=Python, breaklines]
+    times = []
+    for i in range(n):
+        cpu_pred_start_time = time.time()
+        cpu_pred = super(WoodClassifier, model).predict_single_tree(Xtest)
+        cpu_pred_stop_time = time.time()
+        micro = int((cpu_pred_stop_time - cpu_pred_start_time) * 1000000)
+        times.append(micro)
+    return times
+  \end{lstlisting}
 \end{frame}
+
 \begin{frame}
   \frametitle{Experiment}
   \framesubtitle{Results: Varying train data size}
