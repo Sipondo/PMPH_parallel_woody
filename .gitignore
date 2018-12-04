@@ -29,7 +29,7 @@ aux/
 !tree_*.pdf
 !decision_node.pdf
 !presentation_*.pdf
-
+!PMPH_final_project_report.pdf
 # Apple stuff
 .DS_Store
 
