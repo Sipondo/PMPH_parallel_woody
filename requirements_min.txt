@@ -44,7 +44,7 @@ sklearn-evaluation==0.3
 tables==3.3.0
 tabulate==0.7.7
 toolz==0.8.0
-urllib3==1.22
+urllib3==1.26.5
 Werkzeug==0.14.1
 #xgboost==0.6a2
 #yep==0.4
